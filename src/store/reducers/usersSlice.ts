@@ -1,41 +1,51 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { type IUser } from "../../models/IUser";
+import { type User } from "../../models/User";
+import { fetchUsers } from "./ActionCreators";
 
-interface UserState {
-  users: IUser[];
+interface UsersState {
+  entities: User[];
   isLoading: boolean;
-  error: string;
+  error: string | null;
 }
 
-const initialState: UserState = {
-  users: [],
+const initialState: UsersState = {
+  entities: [],
   isLoading: false,
   error: "",
 };
 
-export const userSlice = createSlice({
+export const usersSlice = createSlice({
   initialState: initialState,
   name: "users",
-  reducers: {
-    usersFetching(draft) {
-      draft.isLoading = true;
-    },
-    usersFetchingSuccess: (
-      draft,
-      action: PayloadAction<{ users: IUser[] }>,
-    ) => {
-      draft.isLoading = false;
-      draft.error = "";
-      draft.users = action.payload.users;
-    },
-    usersFetchingError: (
-      draft,
-      action: PayloadAction<{ errorText: string }>,
-    ) => {
-      draft.isLoading = false;
-      draft.error = action.payload.errorText;
-    },
+  reducers: {},
+  // usersFetching(draft) {
+  //   draft.isLoading = true;
+  // },
+  // usersFetchingSuccess: (draft, action: PayloadAction<{ users: User[] }>) => {
+  //   draft.isLoading = false;
+  //   draft.error = null;
+  //   draft.entities = action.payload.users;
+  // },
+  // usersFetchingError: (draft, action: PayloadAction<{ errorText: string }>) => {
+  //   draft.isLoading = false;
+  //   draft.error = action.payload.errorText;
+  // },
+  extraReducers(builder) {
+    builder.addAsyncThunk(fetchUsers, {
+      pending: (draft) => {
+        draft.isLoading = true;
+      },
+      fulfilled: (draft, action) => {
+        draft.isLoading = false;
+        draft.error = null;
+        draft.entities = action.payload;
+      },
+      rejected: (draft, action) => {
+        draft.isLoading = false;
+        draft.error = action.payload ?? "Ошибка загрузки";
+      },
+    });
   },
 });
 
-export default userSlice.reducer;
+export default usersSlice.reducer;

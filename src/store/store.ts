@@ -1,7 +1,6 @@
 import {
   combineReducers,
   configureStore,
-  type ThunkAction,
   type ThunkDispatch,
   type UnknownAction,
 } from "@reduxjs/toolkit";

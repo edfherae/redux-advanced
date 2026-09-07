@@ -1,17 +1,36 @@
 import axios from "axios";
 import type { AppDispatch } from "../store";
-import type { IUser } from "../../models/IUser";
-import { userSlice } from "./usersSlice";
+import type { User } from "../../models/User";
+import { usersSlice } from "./usersSlice";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
-export const fetchUsers = () => async (dispatch: AppDispatch) => {
+// export const fetchUsers = () => async (dispatch: AppDispatch) => {
+//   try {
+//     dispatch(usersSlice.actions.usersFetching());
+//     const response = await axios.get<User[]>(
+//       "https://jsonplaceholder.typicode.com/users",
+//     );
+//     dispatch(usersSlice.actions.usersFetchingSuccess({ users: response.data }));
+//   } catch (e) {
+//     if (e instanceof Error)
+//       dispatch(usersSlice.actions.usersFetchingError({ errorText: e.message }));
+//   }
+// };
+
+export const fetchUsers = createAsyncThunk<
+  User[],
+  void,
+  { rejectValue: string }
+>("users/fetchAll", async (_, ThunkAPI) => {
   try {
-    dispatch(userSlice.actions.usersFetching());
-    const response = await axios.get<IUser[]>(
+    const response = await axios.get<User[]>(
       "https://jsonplaceholder.typicode.com/users",
     );
-    dispatch(userSlice.actions.usersFetchingSuccess({ users: response.data }));
+    return response.data;
   } catch (e) {
-    if (e instanceof Error)
-      dispatch(userSlice.actions.usersFetchingError({ errorText: e.message }));
+    const message = e instanceof Error ? e.message : "Неизвестная ошибка";
+    return ThunkAPI.rejectWithValue(
+      `Не удалось загрузить пользователей. Ошибка: ${message}`,
+    );
   }
-};
+});
