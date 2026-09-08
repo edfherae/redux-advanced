@@ -1,9 +1,4 @@
-import {
-  combineReducers,
-  configureStore,
-  type ThunkDispatch,
-  type UnknownAction,
-} from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./reducers/usersSlice";
 import { postsAPI } from "../services/postsService";
 

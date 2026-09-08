@@ -3,6 +3,7 @@ import "./App.scss";
 import { useAppDispatch, useAppSelector } from "./hooks/hooks";
 import { fetchUsers } from "./store/reducers/ActionCreators";
 import { usersSlice } from "./store/reducers/usersSlice";
+import PostContainer from "./components/PostContainer";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -13,7 +14,7 @@ function App() {
   return (
     <>
       <section id="center">
-        <button onClick={() => dispatch(fetchUsers())}>Fetch users</button>
+        {/* <button onClick={() => dispatch(fetchUsers())}>Fetch users</button>
         {isLoading && <p>Загрузка...</p>}
         {!isLoading && error && <p>Ошибка: {error}</p>}
         {!isLoading && error === null && users.length === 0 && (
@@ -25,7 +26,9 @@ function App() {
               <li>{user.name}</li>
             ))}
           </ul>
-        )}
+        )} */}
+
+        <PostContainer />
       </section>
     </>
   );
